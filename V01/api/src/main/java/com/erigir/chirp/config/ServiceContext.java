@@ -17,7 +17,6 @@ import java.util.Date;
  * Created by chrweiss on 7/12/14.
  */
 @Configuration
-@PropertySource("classpath:application.properties")
 public class ServiceContext {
     @Value("${error.code.documentation.prefix}")
     private String errorCodeDocumentationPrefix;
