@@ -351,6 +351,26 @@
                 </dependencies>
             </plugin>
 
+            <plugin>
+                <groupId>com.erigir</groupId>
+                <artifactId>seedy-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <configuration>
+                    <afterGreenSleepSeconds>30</afterGreenSleepSeconds>
+                    <applicationName>chirp-a</applicationName>
+                    <s3Bucket>seedy-uploads</s3Bucket>
+                    <s3Prefix>chirp/</s3Prefix>
+                    <poolConfigFile>src/main/config/live-config.json</poolConfigFile>
+                    <solutionStack>64bit Amazon Linux 2014.03 v1.0.4 running Tomcat 7 Java 7</solutionStack>
+                    <prePingSleepSeconds>300</prePingSleepSeconds>
+                    <maxWaitSeconds>420</maxWaitSeconds>
+                    <liveServerDomainName>chirp-a.elasticbeanstalk.com</liveServerDomainName>
+                    <preFlipLiveWaitSeconds>15</preFlipLiveWaitSeconds>
+                    <terminateOldEnviroment>false</terminateOldEnviroment>
+                    <applicationFile>${project.build.directory}/${project.build.finalName}.war</applicationFile>
+                </configuration>
+            </plugin>
+
         </plugins>
 
 

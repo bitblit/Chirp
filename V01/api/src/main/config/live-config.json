@@ -1,0 +1,37 @@
+[
+    {
+        "Namespace": "aws:autoscaling:asg",
+        "OptionName": "MinSize",
+        "Value": "1"
+    },
+    {
+        "Namespace": "aws:autoscaling:asg",
+        "OptionName": "MaxSize",
+        "Value": "4"
+    },
+    {
+        "Namespace": "aws:autoscaling:launchconfiguration",
+        "OptionName": "InstanceType",
+        "Value": "t1.micro"
+    },
+    {
+        "Namespace": "aws:autoscaling:launchconfiguration",
+        "OptionName": "EC2KeyName",
+        "Value": "allpoint-chirp"
+    },
+    {
+        "Namespace": "aws:autoscaling:launchconfiguration",
+        "OptionName": "IamInstanceProfile",
+        "Value": "chirp-prod"
+    },
+    {
+        "Namespace": "aws:autoscaling:launchconfiguration",
+        "OptionName": "MonitoringInterval",
+        "Value": "5 minutes"
+    },
+    {
+        "Namespace": "aws:elasticbeanstalk:application:environment",
+        "OptionName": "MY-CUSTOM-ENV-VARIABLE",
+        "Value": "variable value"
+    }
+]
