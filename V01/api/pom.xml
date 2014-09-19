@@ -210,7 +210,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>17.0</version>
+            <version>15.0</version> <!-- 16+ breaks selenium which uses deprecated method -->
         </dependency>
 
         <dependency>
@@ -236,9 +236,8 @@
             <version>${handlebars-version}</version>
         </dependency>
 
-        <!--
         <dependency>
-            <groupId>org.iumhq.selenium</groupId>
+            <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>2.24.1</version>
             <scope>test</scope>
@@ -248,7 +247,6 @@
             <artifactId>operadriver</artifactId>
             <scope>test</scope>
         </dependency>
-        -->
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -371,6 +369,28 @@
                 </configuration>
             </plugin>
 
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                <execution>
+                    <goals>
+                        <goal>integration-test</goal>
+                        <goal>verify</goal>
+                    </goals>
+                </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>2.17</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
         </plugins>
 
 
@@ -428,7 +448,7 @@
             <dependency>
                 <groupId>com.opera</groupId>
                 <artifactId>operadriver</artifactId>
-                <version>0.14</version>
+                <version>1.5</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.seleniumhq.selenium</groupId>

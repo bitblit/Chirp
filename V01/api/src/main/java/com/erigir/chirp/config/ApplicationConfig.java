@@ -20,8 +20,6 @@ public class ApplicationConfig implements WebApplicationInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        // FIXME : org.springframework.beans.FatalBeanException fb = new FatalBeanException("asdf");
-
         //If you want to use the XML configuration, comment the following two lines out.
         AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
         rootContext.register(WebAppContext.class);
