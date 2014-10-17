@@ -210,7 +210,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>17.0</version>
+            <version>15.0</version> <!-- 16+ breaks selenium which uses deprecated method -->
         </dependency>
 
         <dependency>
@@ -236,9 +236,8 @@
             <version>${handlebars-version}</version>
         </dependency>
 
-        <!--
         <dependency>
-            <groupId>org.iumhq.selenium</groupId>
+            <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>2.24.1</version>
             <scope>test</scope>
@@ -248,7 +247,6 @@
             <artifactId>operadriver</artifactId>
             <scope>test</scope>
         </dependency>
-        -->
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -306,7 +304,7 @@
                         <value>local</value>
                     </systemProperties>
                     <path>/</path>
-                    <httpPort>${tomcat.port.number}</httpPort>
+                    <port>${tomcat.port.number}</port>
                     <httpsPort>${tomcat.ssl.port.number}</httpsPort>
                     <keystoreFile>${basedir}/src/main/config/tomcat-ssl.keystore</keystoreFile>
                     <keystorePass>jetty8</keystorePass>
@@ -347,6 +345,48 @@
                         <groupId>org.codehaus.plexus</groupId>
                         <artifactId>plexus-compiler-javac-errorprone</artifactId>
                         <version>2.3</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>com.erigir</groupId>
+                <artifactId>seedy-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <configuration>
+                    <afterGreenSleepSeconds>30</afterGreenSleepSeconds>
+                    <applicationName>chirp-a</applicationName>
+                    <s3Bucket>seedy-uploads</s3Bucket>
+                    <s3Prefix>chirp/</s3Prefix>
+                    <poolConfigFile>src/main/config/live-config.json</poolConfigFile>
+                    <solutionStack>64bit Amazon Linux 2014.03 v1.0.4 running Tomcat 7 Java 7</solutionStack>
+                    <prePingSleepSeconds>300</prePingSleepSeconds>
+                    <maxWaitSeconds>420</maxWaitSeconds>
+                    <liveServerDomainName>chirp-a.elasticbeanstalk.com</liveServerDomainName>
+                    <preFlipLiveWaitSeconds>15</preFlipLiveWaitSeconds>
+                    <terminateOldEnviroment>false</terminateOldEnviroment>
+                    <applicationFile>${project.build.directory}/${project.build.finalName}.war</applicationFile>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                <execution>
+                    <goals>
+                        <goal>integration-test</goal>
+                        <goal>verify</goal>
+                    </goals>
+                </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>2.17</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -408,7 +448,7 @@
             <dependency>
                 <groupId>com.opera</groupId>
                 <artifactId>operadriver</artifactId>
-                <version>0.14</version>
+                <version>1.5</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.seleniumhq.selenium</groupId>

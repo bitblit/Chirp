@@ -49,8 +49,8 @@
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
         <mytime>${maven.build.timestamp}</mytime>
-        <jetty.port.number>8081</jetty.port.number>
-        <jetty.ssl.port.number>8444</jetty.ssl.port.number>
+        <tomcat.port.number>8081</tomcat.port.number>
+        <tomcat.ssl.port.number>8444</tomcat.ssl.port.number>
     </properties>
 
 
@@ -58,46 +58,73 @@
 
         <plugins>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>8.1.9.v20130131</version>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
                 <configuration>
                     <systemProperties>
-                        <systemProperty>
-                            <name>version</name>
-                            <value>1</value>
-                        </systemProperty>
+                        <name>spring.profiles.active</name>
+                        <value>local</value>
                     </systemProperties>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <connectors>
-                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                            <port>${jetty.port.number}</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                        </connector>
-                        <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
-                            <port>${jetty.ssl.port.number}</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                            <keystore>${basedir}/src/main/config/jetty-ssl.keystore</keystore>
-                            <password>jetty8</password>
-                            <keyPassword>jetty8</keyPassword>
-                        </connector>
-                    </connectors>
+                    <path>/</path>
+                    <port>${tomcat.port.number}</port>
+                    <httpsPort>${tomcat.ssl.port.number}</httpsPort>
+                    <keystoreFile>${basedir}/src/main/config/tomcat-ssl.keystore</keystoreFile>
+                    <keystorePass>jetty8</keystorePass>
                 </configuration>
-
             </plugin>
 
+
+            <!-- chirp.allpointpen.com.s3-website-us-east-1.amazonaws.com -->
             <plugin>
-                <groupId>com.bazaarvoice.maven.plugins</groupId>
-                <artifactId>s3-upload-maven-plugin</artifactId>
-                <version>1.4-SNAPSHOT</version>
+                <groupId>com.erigir</groupId>
+                <artifactId>seedy-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
                 <configuration>
-                    <bucketName>api-docs.allpointpen.com</bucketName>
+                    <s3Bucket>${bucketName}</s3Bucket>
                     <source>${project.basedir}/src/main/webapp</source>
                     <recursive>true</recursive>
-                    <compress>true</compress>
-                    <compressExcludes>
-                        <value>.*\.mov</value>
-                    </compressExcludes>
+
+                    <fileCompression>
+                        <includeRegex>.*</includeRegex>
+                    </fileCompression>
+                    <javascriptCompilation>
+                        <includeRegex>.*\.js</includeRegex>
+                        <mode>CLOSURE_WHITESPACE</mode>
+                    </javascriptCompilation>
+                    <!--
+                    <cssCompilation>
+                        <includeRegex>.*\.css</includeRegex>
+                    </cssCompilation>
+
+                    <htmlResourceBatchings>
+                        <htmlResourceBatching>
+                            <flagName>JSBUNDLE</flagName>
+                            <includeRegex>.*/js/bundle/.*\.js</includeRegex>
+                            <replaceInHtmlRegex>.*\.html</replaceInHtmlRegex>
+                            <wrapper>JAVASCRIPT</wrapper>
+                            <outputFileName>js/bundle/js-bundle.js</outputFileName>
+                            <replaceText>/js/bundle/js-bundle.js</replaceText>
+                            <deleteSource>false</deleteSource>
+                        </htmlResourceBatching>
+                    </htmlResourceBatchings>
+                    -->
+
+                    <objectMetadataSettings>
+                        <objectMetadataSetting>
+                            <includeRegex>.*</includeRegex>
+                            <cacheControl>max-age=30</cacheControl>
+                            <userMetaData>
+                                <uploadTime>${maven.build.timestamp}</uploadTime>
+                            </userMetaData>
+                        </objectMetadataSetting>
+                        <objectMetadataSetting>
+                            <includeRegex>.*\.html</includeRegex>
+                            <content-type>text/html; charset=utf-8</content-type>
+                        </objectMetadataSetting>
+                    </objectMetadataSettings>
+
+
                 </configuration>
             </plugin>
 
