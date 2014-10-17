@@ -19,7 +19,11 @@ An application for learning Java by reimplimenting Twitter (sorta).  Shows how t
 * Optional: https
 * Setup Cloudfront
 
-V01
-===
+How this Repo Works
+===================
+Chirp is built as a series of steps, each one a *BRANCH* of the same Chirp repo.  As you work through each branch, you can see the changes we make to implement the goals of that branch and compare them to the changes you made.
 
-* Using maven to push new content to the bucket 
+
+Branch: V01
+Goals: Using maven to push new content to the bucket 
+

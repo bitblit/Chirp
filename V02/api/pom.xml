@@ -304,7 +304,7 @@
                         <value>local</value>
                     </systemProperties>
                     <path>/</path>
-                    <httpPort>${tomcat.port.number}</httpPort>
+                    <port>${tomcat.port.number}</port>
                     <httpsPort>${tomcat.ssl.port.number}</httpsPort>
                     <keystoreFile>${basedir}/src/main/config/tomcat-ssl.keystore</keystoreFile>
                     <keystorePass>jetty8</keystorePass>

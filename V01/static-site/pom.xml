@@ -84,17 +84,22 @@
                     <s3Bucket>${bucketName}</s3Bucket>
                     <source>${project.basedir}/src/main/webapp</source>
                     <recursive>true</recursive>
+
+
+
+
+
                     <fileCompression>
                         <includeRegex>.*</includeRegex>
                     </fileCompression>
-                    <cssCompilation>
-                        <includeRegex>.*\.css</includeRegex>
-                    </cssCompilation>
-                    <!--
                     <javascriptCompilation>
                         <includeRegex>.*\.js</includeRegex>
                         <mode>CLOSURE_WHITESPACE</mode>
                     </javascriptCompilation>
+                    <!--
+                    <cssCompilation>
+                        <includeRegex>.*\.css</includeRegex>
+                    </cssCompilation>
 
                     <htmlResourceBatchings>
                         <htmlResourceBatching>
