@@ -26,9 +26,9 @@ Chirp is built as a series of steps, each one a *BRANCH* of the same Chirp repo.
 
 ## Links to the docs for each version
 see documentation:
-    * <a href=“src/main/site/version-docs/V00.md”>Version 00</a>
-    * <a href=“src/main/site/version-docs/V01.md”>Version 01</a>
-    * <a href=“src/main/site/version-docs/V02.md”>Version 02</a>
-    * <a href=“src/main/site/version-docs/V03.md”>Version 03</a>
+    * <a href="src/main/site/version-docs/V00.md">Version 00</a>
+    * <a href="src/main/site/version-docs/V01.md">Version 01</a>
+    * <a href="src/main/site/version-docs/V02.md">Version 02</a>
+    * <a href="src/main/site/version-docs/V03.md">Version 03</a>
 
 
