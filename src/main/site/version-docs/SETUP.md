@@ -1,8 +1,8 @@
-Branch: Master
-Goals: Verify that you have all your prerequisites set up, and clone the main repository
+# Branch: Master
+# Goals: 
+# * Verify that you have all your prerequisites set up, and clone the main repository
 
-Prerequisites
-=============
+## Prerequisites
 
 Before you get started, you'll want to make sure you have these things:
 
@@ -43,13 +43,11 @@ if you fork, and later I make changes, you'll need to pull and merge, so you may
 if you *DO* fork, remember that the clone commands should be for your repo, not mine.
 
 
-Getting started
-===============
+## Getting started
 
 Now that you have all of that out of the way, you're ready to get started!  
 
-Clone this repo
----------------
+### Clone this repo
 CD into a local directory where you store your work and:
 
 *git clone git@github.com:bitblit/Chirp.git*
