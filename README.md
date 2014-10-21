@@ -65,9 +65,9 @@ Follow the <a href="src/main/site/version-docs/SETUP.md">initial setup instructi
 
 Links to each step's documentation
 ==================================
-    * <a href="src/main/site/version-docs/SETUP.md">Getting started</a>
-    * <a href="src/main/site/version-docs/V01.md">Version 01</a>
-    * <a href="src/main/site/version-docs/V02.md">Version 02</a>
-    * <a href="src/main/site/version-docs/V03.md">Version 03</a>
+* <a href="src/main/site/version-docs/SETUP.md">Getting started</a>
+* <a href="src/main/site/version-docs/V01.md">Version 01</a>
+* <a href="src/main/site/version-docs/V02.md">Version 02</a>
+* <a href="src/main/site/version-docs/V03.md">Version 03</a>
 
 
