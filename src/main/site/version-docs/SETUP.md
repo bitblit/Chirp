@@ -1,6 +1,6 @@
 # Branch: Master
 # Goals: 
-# * Verify that you have all your prerequisites set up, and clone the main repository
+* Verify that you have all your prerequisites set up, and clone the main repository
 
 ## Prerequisites
 
