@@ -29,7 +29,8 @@
 
         <site.name>chirp</site.name>
         <chirp.version>1.0.0-SNAPSHOT</chirp.version>
-        <spring.version>3.1.1.RELEASE</spring.version>
+        <jackson.version>2.4.1</jackson.version>
+        <spring.version>4.0.5.RELEASE</spring.version>
         <aws.version>1.7.12</aws.version>
         <slf4j.version>1.7.6</slf4j.version>
         <junit.version>4.8.2</junit.version>

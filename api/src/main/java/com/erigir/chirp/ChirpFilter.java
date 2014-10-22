@@ -25,8 +25,17 @@ public class ChirpFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) arg1;
 
         resp.setHeader("Max-Age", "30");
+        addCORSHeaders(resp);
         arg2.doFilter(arg0, arg1); // Matched a no-key regex, handle publicly
 
+    }
+
+    public void addCORSHeaders(HttpServletResponse resp)
+    {
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
+        resp.setHeader("Access-Control-Max-Age", "600");
+        resp.setHeader("Access-Control-Allow-Headers", "x-requested-with, Content-Type");
     }
 
     @Override

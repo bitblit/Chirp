@@ -17,7 +17,7 @@
     {
         "Namespace": "aws:autoscaling:launchconfiguration",
         "OptionName": "EC2KeyName",
-        "Value": "allpoint-chirp"
+        "Value": "chirp-key"
     },
     {
         "Namespace": "aws:autoscaling:launchconfiguration",
