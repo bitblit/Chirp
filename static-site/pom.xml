@@ -13,7 +13,7 @@
     <packaging>war</packaging>
     <name>Chirp Static Web Site</name>
     <version>1.0.0-SNAPSHOT</version>
-    <description>Website of Chirp docs</description>
+    <description>Website of Chirp</description>
     <url>http://chirp.erigir.com/</url>
     <inceptionYear>2014</inceptionYear>
 
@@ -44,19 +44,10 @@
 
     </dependencies>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-        <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
-        <mytime>${maven.build.timestamp}</mytime>
-        <tomcat.port.number>8081</tomcat.port.number>
-        <tomcat.ssl.port.number>8444</tomcat.ssl.port.number>
-    </properties>
-
-
     <build>
 
         <plugins>
+
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
@@ -67,48 +58,24 @@
                         <value>local</value>
                     </systemProperties>
                     <path>/</path>
-                    <port>${tomcat.port.number}</port>
-                    <httpsPort>${tomcat.ssl.port.number}</httpsPort>
+                    <port>8080</port>
+                    <httpsPort>8443</httpsPort>
                     <keystoreFile>${basedir}/src/main/config/tomcat-ssl.keystore</keystoreFile>
                     <keystorePass>jetty8</keystorePass>
                 </configuration>
             </plugin>
 
-
-            <!-- chirp.allpointpen.com.s3-website-us-east-1.amazonaws.com -->
             <plugin>
                 <groupId>com.erigir</groupId>
                 <artifactId>seedy-maven-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>0.1</version>
                 <configuration>
-                    <s3Bucket>${bucketName}</s3Bucket>
+                    <s3Bucket>${BUCKET_NAME}</s3Bucket>
                     <source>${project.basedir}/src/main/webapp</source>
-                    <recursive>true</recursive>
 
                     <fileCompression>
                         <includeRegex>.*</includeRegex>
                     </fileCompression>
-                    <javascriptCompilation>
-                        <includeRegex>.*\.js</includeRegex>
-                        <mode>CLOSURE_WHITESPACE</mode>
-                    </javascriptCompilation>
-                    <!--
-                    <cssCompilation>
-                        <includeRegex>.*\.css</includeRegex>
-                    </cssCompilation>
-
-                    <htmlResourceBatchings>
-                        <htmlResourceBatching>
-                            <flagName>JSBUNDLE</flagName>
-                            <includeRegex>.*/js/bundle/.*\.js</includeRegex>
-                            <replaceInHtmlRegex>.*\.html</replaceInHtmlRegex>
-                            <wrapper>JAVASCRIPT</wrapper>
-                            <outputFileName>js/bundle/js-bundle.js</outputFileName>
-                            <replaceText>/js/bundle/js-bundle.js</replaceText>
-                            <deleteSource>false</deleteSource>
-                        </htmlResourceBatching>
-                    </htmlResourceBatchings>
-                    -->
 
                     <objectMetadataSettings>
                         <objectMetadataSetting>
@@ -123,7 +90,6 @@
                             <content-type>text/html; charset=utf-8</content-type>
                         </objectMetadataSetting>
                     </objectMetadataSettings>
-
 
                 </configuration>
             </plugin>
