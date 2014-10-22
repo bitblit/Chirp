@@ -53,3 +53,5 @@ CD into a local directory where you store your work and:
 **git clone git@github.com:bitblit/Chirp.git**
 
 This should create a directory "Chirp" with all the files in it.
+
+Congrats!  If you reached here, you are ready to move on to <a href="V01.md">Version 01</a>
