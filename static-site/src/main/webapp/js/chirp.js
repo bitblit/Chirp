@@ -19,4 +19,18 @@ $(document).ready(function () {
         },
         dataType: 'json'
     });
+
+    $.ajax({
+        type: "GET",
+        url: "/api/v1/chirp/count",
+        contentType: "application/json; charset=utf-8",
+        success: function (res, statusText, xhr, $form) {
+            $("#chirpCount").html(res);
+        },
+        error: function (res, statusText, xhr, $form) {
+            $("#chirpCount").html("<h1>Error trying to lookup time: "+statusText+"</h1>");
+        },
+        dataType: 'json'
+    });
+
 });
