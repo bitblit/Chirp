@@ -16,7 +16,7 @@ import java.util.TreeMap;
  * cweiss : 6/28/14 11:53 AM
  */
 @Controller
-@RequestMapping("/v1/info")
+@RequestMapping("/api/v1/info")
 public class InformationCtrl {
     private static final Logger LOG = LoggerFactory.getLogger(InformationCtrl.class);
 
