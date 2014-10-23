@@ -69,5 +69,9 @@ Links to each step's documentation
 * <a href="src/main/site/version-docs/V01.md">Version 01</a>
 * <a href="src/main/site/version-docs/V02.md">Version 02</a>
 * <a href="src/main/site/version-docs/V03.md">Version 03</a>
+* <a href="src/main/site/version-docs/V04.md">Version 04</a>
+* <a href="src/main/site/version-docs/V05.md">Version 05</a>
+* <a href="src/main/site/version-docs/V06.md">Version 06</a>
+* <a href="src/main/site/version-docs/V07.md">Version 07</a>
 
 
