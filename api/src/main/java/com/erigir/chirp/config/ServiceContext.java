@@ -2,6 +2,7 @@ package com.erigir.chirp.config;
 
 
 import com.erigir.chirp.ChirpFilter;
+import com.erigir.chirp.service.ChirpService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -31,6 +32,14 @@ public class ServiceContext {
         ChirpFilter bean = new ChirpFilter();
         return bean;
     }
+
+    @Bean
+    public ChirpService chirpService()
+    {
+        ChirpService bean = new ChirpService();
+        return bean;
+    }
+
 
     @Bean
     public ObjectMapper objectMapper() {
