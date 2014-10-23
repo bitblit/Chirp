@@ -71,6 +71,7 @@
                 <version>0.1</version>
                 <configuration>
                     <s3Bucket>${BUCKET_NAME}</s3Bucket>
+                    <recursive>true</recursive>
                     <source>${project.basedir}/src/main/webapp</source>
 
                     <fileCompression>
