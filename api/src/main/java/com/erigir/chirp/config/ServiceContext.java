@@ -1,6 +1,11 @@
 package com.erigir.chirp.config;
 
 
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.erigir.chirp.ChirpFilter;
 import com.erigir.chirp.service.ChirpService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -28,6 +33,24 @@ public class ServiceContext {
     }
 
     @Bean
+    public AWSCredentialsProvider awsCredentialsProvider() {
+        return new DefaultAWSCredentialsProviderChain();
+    }
+
+    @Bean
+    public AmazonDynamoDB dynamoDB() {
+        return new AmazonDynamoDBClient(awsCredentialsProvider());
+    }
+
+    @Bean
+    public DynamoDBMapper dynamoDBMapper() {
+        return new DynamoDBMapper(dynamoDB());
+    }
+
+
+
+
+    @Bean
     public ChirpFilter chirpFilter() {
         ChirpFilter bean = new ChirpFilter();
         return bean;
@@ -37,6 +60,7 @@ public class ServiceContext {
     public ChirpService chirpService()
     {
         ChirpService bean = new ChirpService();
+        bean.setDynamoDBMapper(dynamoDBMapper());
         return bean;
     }
 
