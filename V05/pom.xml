@@ -1,0 +1,139 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <artifactId>parent</artifactId>
+        <groupId>com.erigir.chirp</groupId>
+        <version>LOCAL-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.erigir.chirp</groupId>
+    <artifactId>v05</artifactId>
+    <packaging>war</packaging>
+    <name>Website for chirp</name>
+    <version>LOCAL-SNAPSHOT</version>
+    <description>Website for chirp</description>
+    <url>http://chirp.erigir.com</url>
+    <inceptionYear>2015</inceptionYear>
+
+    <issueManagement>
+    </issueManagement>
+
+    <ciManagement>
+    </ciManagement>
+
+    <organization>
+        <name>Chirp</name>
+        <url>http://chirp.erigir.com</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>cweiss</id>
+            <name>Chris Weiss</name>
+            <email>bitblit@gmail.com</email>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.erigir</groupId>
+            <artifactId>wrench-web</artifactId>
+            <version>${wrench.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+
+
+    </dependencies>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+        <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+        <mytime>${maven.build.timestamp}</mytime>
+        <tomcat.port.number>8082</tomcat.port.number>
+        <tomcat.ssl.port.number>8445</tomcat.ssl.port.number>
+    </properties>
+
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <systemProperties>
+                        <spring.profiles.active>local</spring.profiles.active>
+                        <simpleIncludesSource>${project.basedir}/src/main/webapp</simpleIncludesSource>
+                    </systemProperties>
+                    <path>/</path>
+                    <port>${tomcat.port.number}</port>
+                    <httpsPort>${tomcat.ssl.port.number}</httpsPort>
+                    <keystoreFile>${basedir}/src/main/config/tomcat-ssl.keystore</keystoreFile>
+                    <keystorePass>jetty8</keystorePass>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.erigir</groupId>
+                <artifactId>seedy-maven-plugin</artifactId>
+                <version>${seedy.version}</version>
+                <configuration>
+                    <s3Bucket>${bucket.name}</s3Bucket>
+                    <source>${project.basedir}/src/main/webapp</source>
+                    <recursive>true</recursive>
+                    <deltaMethod>MD5</deltaMethod>
+                    <deleteNonMatch>false</deleteNonMatch>
+                    <doNotUpload>false</doNotUpload>
+                    <backupCurrent>false</backupCurrent>
+
+                    <objectMetadataSettings>
+                        <objectMetadataSetting>
+                            <includeRegex>.*</includeRegex>
+                            <cacheControl>max-age=30</cacheControl>
+                            <userMetaData>
+                                <uploadTime>${maven.build.timestamp}</uploadTime>
+                            </userMetaData>
+                        </objectMetadataSetting>
+                        <objectMetadataSetting>
+                            <includeRegex>.*\.html</includeRegex>
+                            <content-type>text/html; charset=utf-8</content-type>
+                        </objectMetadataSetting>
+                    </objectMetadataSettings>
+
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+    </build>
+    <profiles>
+    </profiles>
+
+
+</project>

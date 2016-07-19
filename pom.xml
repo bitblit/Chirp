@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.erigir</groupId>
-    <artifactId>chirp</artifactId>
+    <groupId>com.erigir.chirp</groupId>
+    <artifactId>parent</artifactId>
+
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>LOCAL-SNAPSHOT</version>
     <name>chirp</name>
     <description>Twitter clone for learning Java</description>
     <inceptionYear>2014</inceptionYear>
@@ -36,20 +38,18 @@
         <junit.version>4.8.2</junit.version>
         <logback.version>1.0.11</logback.version>
         <jdk.version>1.7</jdk.version>
+        <wrench.version>1.2.1+76</wrench.version>
+        <seedy.version>0.9.0+45</seedy.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
     <modules>
-        <module>api</module>
-        <module>static-site</module>
+        <module>V00</module>
+        <module>V01</module>
+        <module>V02</module>
+        <module>V03</module>
+        <module>V04</module>
+        <module>V05</module>
+        <module>V06</module>
     </modules>
 
     <build>
