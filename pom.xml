@@ -28,17 +28,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
         <mytime>${maven.build.timestamp}</mytime>
-
         <site.name>chirp</site.name>
-        <chirp.version>1.0.0-SNAPSHOT</chirp.version>
-        <jackson.version>2.4.1</jackson.version>
-        <spring.version>4.0.5.RELEASE</spring.version>
-        <aws.version>1.7.12</aws.version>
-        <slf4j.version>1.7.6</slf4j.version>
-        <junit.version>4.8.2</junit.version>
-        <logback.version>1.0.11</logback.version>
-        <jdk.version>1.7</jdk.version>
-        <wrench.version>1.2.1+76</wrench.version>
         <seedy.version>0.9.0+45</seedy.version>
     </properties>
 

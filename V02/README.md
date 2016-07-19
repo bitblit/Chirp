@@ -14,18 +14,18 @@ You don't HAVE to use it (feel free to try other things, I won't hate you) but I
 static sites locally.  This step assumes you already know Maven pretty well, and we are just creating the right structures.
 
 ## Create Maven structures for our static website
-While I know I originally told you to try doing the changes yourself before merging **my** changes, in this case I'm going
-to break that rule and tell you to just go ahead and do a **git merge V02** now.  This is because this step is about
-setting up a bunch of directories and POM files for maven that you'll need for later work.  Don't worry - we'll step through
-what we are doing and what changes we make.
+While I know I originally told you to try doing the changes yourself before bringing in **my** changes, in this case I'm going
+to break that rule and tell you to just go ahead and do **cp -R V02/static-site MINE** and **cp V02/pom.xml MINE** now.  
+This is because this step is about setting up a bunch of directories and POM files for maven that you'll need for later work.  
+Don't worry - we'll step through what we are doing and what changes we make.
 
-### Information about the just-merged structure
+### Information about the just-copied structure
 
-After you do the merge, you should see that we created a directory static-site, and that it has the Maven-standard layout
+After you do the copy, you should see that we created a directory static-site, and that it has the Maven-standard layout
 **src/main/config** and **src/main/webapp**, along with a file pom.xml in the root directory.
 
 Why the sub-directory for the static site if it has all the content?  Because in later stages we'll be adding an API directory
-with our API server.  For the moment notice that the root pom file really just contains so overall information (like the
+with our API functions.  For the moment notice that the root pom file really just contains so overall information (like the
 developer name) and a list of sub-modules (at the moment, just static-site).
 
 Now take a look in the static-site subdirectory.  At first the POM file in this module may seem a little weird since
@@ -33,13 +33,12 @@ its all going to be static content.  We place it here because we are going to us
 * To run a webserver that serves the static content locally so we can do rapid development
 * To push the content to our S3 bucket
 Both of these functions are implemented as Maven plugins, making it easy both for you to do them manually, and for you
-to plug them into your build server (like Jenkins) later if you so choose.
+to plug them into your build server (like Jenkins or CircleCI) later if you so choose.
 
 In the **src/main/config** directory you'll see a keystore file - this is just so that we can run 
-HTTPS locally (useful if you are going to run HTTPS in production - you'll want to see how things run HTTPS).  Note that
+HTTPS locally (useful since you are going to run HTTPS in production - you'll want to see how things run HTTPS).  Note that
 this is a generic self-signed certificate, so your browser will complain when you hit the HTTPS port, but thats ok, it'll
 still be running HTTPS.
-
 
 In **src/main/webapp** you'll see the directory that we will be mirroring into our website down the road.  In there you 
 will see a file (index.html) and a directory (js) which contains a file **chirp.js**, that is currently just a JQuery
@@ -49,13 +48,13 @@ You'll notice that the index.html file is already configured to load JQuery and 
 doesn't mean you MUST use JQuery or Twitter bootstrap, but for this exercise we will be using both.  Also notice the form
 these usages take, something like this:
 
-**<script src="//code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>**
+**<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js" type="text/javascript"></script>**
 
 Note 2 things: first, the protocol relative url (a url that starts with //) - this means load from that server, but using
 the protocol the current page was loaded with.  This prevents those annoying mixed-mode warnings when the page was loaded
 https and the script is loaded http - the script will be loaded with whatever protocol the page was loaded with.
 
-Second, notice we are using a public CDN for our jquery.  The upside of this is that we get fast downloads, and if the customer
+Second, notice we are using a public CDN for our JQuery.  The upside of this is that we get fast downloads, and if the customer
 has visited some other page that used this same CDN they may already have that file in their browser cache!  The downsides
 are that you can't develop offline (your page wont work) and, more importantly, this is a really easy way to introduce a 
 security hole if you don't trust the CDN provider (you are allowing them to put whatever they want on your webpage, and
@@ -81,6 +80,9 @@ for deployment and operation **
 * Hit the **Next Step** and **Create group** buttons.  Then, select your newly created group, and hit **Add users to group**, 
 and select the user named **deployer**
 * Congrats, the key/secret pair you just downloaded now has adminstrator access.
+* Lets go ahead and setup that key for your local work.  At the command line, enter **aws configure** , enter
+the access key and secret you just got.  Leave everything else as the defaults.  If you are on OSX, if you do a
+**ls ~/.aws** you'll see the file it created.
 
 ## Learn the basics of the tomcat plugin
 Take a look in the POM file in the static-site subdirectory, looking for this piece:
@@ -91,8 +93,8 @@ Take a look in the POM file in the static-site subdirectory, looking for this pi
         <version>2.2</version>
         <configuration>
             <path>/</path>
-            <port>8080</port>
-            <httpsPort>8443</httpsPort>
+            <port>${tomcat.port.number}</port>
+            <httpsPort>${tomcat.ssl.port.number}</httpsPort>
             <keystoreFile>${basedir}/src/main/config/tomcat-ssl.keystore</keystoreFile>
             <keystorePass>jetty8</keystorePass>
         </configuration>
@@ -101,8 +103,8 @@ Take a look in the POM file in the static-site subdirectory, looking for this pi
 This block allows you to run the contents of the src/main/webapp directory as a static website.  On the command
 line, cd into the **static-site** directory and run **mvn tomcat7:run**.  Once you see the line 
 **INFO: Starting ProtocolHandler ["http-bio-8080"]**, direct your web browser to **http://localhost:8080/index.html**, 
-where you should see the rendered index.html page, reporting version 1.0.  Go into the index.html file and change
-this to be 1.1, then hit refresh on your web browser.  If you see 1.1 show up, you are golden!  Go ahead and **Ctrl-C** the
+where you should see the rendered index.html page, reporting version V02.  Go into the index.html file and change
+this to be V02-a, then hit refresh on your web browser.  If you see V02-a show up, you are golden!  Go ahead and **Ctrl-C** the
 Tomcat webserver.
 
 ## Learn the basics of the seedy s3-upload plugin
@@ -111,7 +113,7 @@ Take a look in the POM again, looking for this piece:
     <plugin>
         <groupId>com.erigir</groupId>
         <artifactId>seedy-maven-plugin</artifactId>
-        <version>0.1</version>
+        <version>${seedy.version}</version>
         <configuration>
             <s3Bucket>${BUCKET_NAME}</s3Bucket>
             <source>${project.basedir}/src/main/webapp</source>

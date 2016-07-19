@@ -37,6 +37,9 @@ You'll need this because you'll want to create a **CNAME** for a domain you own 
  AWS creates.  How you actually create a CNAME varies depending on your provider.  I'll give a general overview for how to do 
  it on GoDaddy, but how to do this on a specific provider is outside the scope of a document.  If you don't know what a CNAME is, 
  I suggest you read http://en.wikipedia.org/wiki/CNAME_record .
+ 
+* The AWS CLI libraries.   Follow the installation instructions here : http://docs.aws.amazon.com/cli/latest/userguide/installing.html,
+when you are done, when you run **aws --version** you should get a result like *aws-cli/1.10.22 Python/2.7.10 Darwin/14.5.0 botocore/1.4.13*
 
 * Sorta optional: A Github account.  If you don't already have one, they are free.  Go to https://github.com/ and get one.
 This project works on the assumption that you won't really want to save the results, so if you are just working through

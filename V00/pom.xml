@@ -9,11 +9,11 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.erigir.chirp</groupId>
-    <artifactId>v00</artifactId>
-    <packaging>war</packaging>
-    <name>Website for chirp</name>
+    <artifactId>V00</artifactId>
+    <packaging>pom</packaging>
+    <name>Parent for V00</name>
     <version>LOCAL-SNAPSHOT</version>
-    <description>Website for chirp</description>
+    <description>Parent for V00</description>
     <url>http://chirp.erigir.com</url>
     <inceptionYear>2015</inceptionYear>
 
@@ -39,6 +39,7 @@
             </roles>
         </developer>
     </developers>
+
 
 
 </project>

@@ -2,17 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <artifactId>chirp</artifactId>
-        <groupId>com.erigir</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <artifactId>V03</artifactId>
+        <groupId>com.erigir.chirp</groupId>
+        <version>LOCAL-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.erigir</groupId>
     <artifactId>chirp-site</artifactId>
     <packaging>war</packaging>
     <name>Chirp Static Web Site</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>LOCAL-SNAPSHOT</version>
     <description>Website of Chirp</description>
     <url>http://chirp.erigir.com/</url>
     <inceptionYear>2014</inceptionYear>
@@ -58,8 +57,8 @@
                         <value>local</value>
                     </systemProperties>
                     <path>/</path>
-                    <port>8080</port>
-                    <httpsPort>8443</httpsPort>
+                    <port>${tomcat.port.number}</port>
+                    <httpsPort>${tomcat.ssl.port.number}</httpsPort>
                     <keystoreFile>${basedir}/src/main/config/tomcat-ssl.keystore</keystoreFile>
                     <keystorePass>jetty8</keystorePass>
                 </configuration>
@@ -68,15 +67,11 @@
             <plugin>
                 <groupId>com.erigir</groupId>
                 <artifactId>seedy-maven-plugin</artifactId>
-                <version>0.1</version>
+                <version>${seedy.version}</version>
                 <configuration>
                     <s3Bucket>${BUCKET_NAME}</s3Bucket>
                     <recursive>true</recursive>
                     <source>${project.basedir}/src/main/webapp</source>
-
-                    <fileCompression>
-                        <includeRegex>.*</includeRegex>
-                    </fileCompression>
 
                     <objectMetadataSettings>
                         <objectMetadataSetting>
