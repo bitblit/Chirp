@@ -5,7 +5,7 @@ deploy_function(){
     if [ -z $1 ] || [ $1 = $2 ]
     then
         echo "deploying $2"
-        aws lambda update-function-code --function-name $2 --s3-bucket your-bucket-here --s3-key LambdaDeploy.zip
+        aws lambda update-function-code --function-name $2 --s3-bucket my-bucket --s3-key LambdaDeploy.zip
     else
         echo "skipping $2"
     fi
@@ -17,7 +17,7 @@ zip -r ../LambdaDeploy.zip .
 cd ..
 
 echo 'File created, uploading to S3'
-aws s3 cp LambdaDeploy.zip s3://your-bucket-here/LambdaDeploy.zip
+aws s3 cp LambdaDeploy.zip s3://my-bucket/LambdaDeploy.zip
 
 echo 'Uploaded, updating lambda'
 
@@ -28,7 +28,7 @@ echo 'Cleaning up local file'
 rm LambdaDeploy.zip
 
 echo 'Cleaning up s3'
-aws s3 rm s3://your-bucket-here/Argon/LambdaDeploy.zip
+aws s3 rm s3://my-bucket/Argon/LambdaDeploy.zip
 
 echo 'Finished'
 

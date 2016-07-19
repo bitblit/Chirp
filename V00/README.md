@@ -8,7 +8,8 @@ Before you get started, you'll want to make sure you have these things:
 
 * An AWS account.  The free version is fine.  If you already have one, that's great, but if not, stop reading this page
 long enough to head on over to http://aws.amazon.com/ and hit the "Sign Up" button, working through the steps to get an 
-account set up.  This exercise works on the assumption that you have an empty AWS account ready to go.
+account set up.  This exercise works on the assumption that you have an empty AWS account ready to go.  Don't worry, nothing
+we are going to do will cost more than about $1 (total).
 
 * Java.  Type **java -version** at your command prompt and make sure you get something back.  Specifically, something that
 is at least version 1.7 (we won't be using anything TOO new, but 1.6 isn't even a supported version any more so get with
