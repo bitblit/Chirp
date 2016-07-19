@@ -116,13 +116,9 @@ Take a look in the POM again, looking for this piece:
         <version>${seedy.version}</version>
         <configuration>
             <s3Bucket>${BUCKET_NAME}</s3Bucket>
-            <source>${project.basedir}/src/main/webapp</source>
             <recursive>true</recursive>
-    
-            <fileCompression>
-                <includeRegex>.*</includeRegex>
-            </fileCompression>
-    
+            <source>${project.basedir}/src/main/webapp</source>
+
             <objectMetadataSettings>
                 <objectMetadataSetting>
                     <includeRegex>.*</includeRegex>
@@ -136,7 +132,7 @@ Take a look in the POM again, looking for this piece:
                     <content-type>text/html; charset=utf-8</content-type>
                 </objectMetadataSetting>
             </objectMetadataSettings>
-    
+
         </configuration>
     </plugin>
 
@@ -147,10 +143,6 @@ A brief summary of what this plugin is doing in its configuration:
  -DBUCKET_NAME=my-bucket to the maven command.
 * source: the directory you'll be uploading
 * recursive: recursively descend directories and upload subdirectories
-* fileCompression: Cloudfront and S3 don't support native GZIP compression, but there is a hack to make them do so by
- gzipping the file yourself, and setting the appropriate Content-Encoding header as metadata.  This line enables GZIP
- compression for every file.  If you wanted to exclude certain files (for example, video files) you would need to toy 
- with the REGEX here.
 * ObjectMetadataSettings allows you to set various other pieces of metadata on your uploaded files.  The first block
  applies to ALL files (**note the regex**) and has these settings:
 ** cacheControl: Remember how we set the Content-Disposition header manually in V01?  This does it automatically
@@ -161,8 +153,8 @@ A brief summary of what this plugin is doing in its configuration:
 ## Upload new content using seedy and make sure it works
 Lets try the upload now.  At the command line in the static-site directory, execute **mvn seedy:s3-upload**.  It should
 fail, complaining of a missing s3Bucket parameter if you forget to make the edit above, or if not a likely
-NullPointerException.  This is a poorly-written exception caused by not having any credentials available!  Let's go ahead
-and setup the credentials you created in the earlier step, like so:
+NullPointerException.  If you get that, its just a poorly-written exception caused by not having any credentials available!  
+You can either follow the **aws configure** information above, or pass them in on the command line like this:
 
 **mvn -Daws.accessKeyId=XXX -Daws.secretKey=YYY seedy:s3-upload**
 
@@ -178,4 +170,4 @@ Making changes should be really easy at this point.  Go into the index.html page
 then run the upload command again.  Check it out on the live site - just like that you can roll new static website 
 changes!
   
-Congrats!  If you reached here, you are ready to move on to <a href="V03.md">Version 03</a>
+Congrats!  If you reached here, you are ready to move on to <a href="../V03/README.md">Version 03</a>
