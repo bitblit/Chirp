@@ -20,21 +20,22 @@ tool for the website is still a Java application.  So that means you have to hav
 get back at least version 3.2.  If you don't, go to http://maven.apache.org/download.cgi and get yourself a copy and 
 install it.
 
+* Python.  We'll be using Python 2.7.  The fights between Python 2.x and 3 are rich, robust, and irrelevant to us since
+we are using AWS Lambda and for now Lambda only supports 2.7 (July 2016).  If you are on OSX, I highly recommend using
+Anaconda (https://www.continuum.io/downloads) rather than fighting forever with Apple's messed up version of Python or
+trying to get Homebrew to work with it correctly.  When you type **python --version** at the command line you should 
+get something along the lines of *Python 2.7.11 :: Anaconda 4.0.0 (x86_64)*
+
 * Git.  If you are reading this on your own machine then you must already have cloned it.  If you are reading it online
 though you'll need git for everything.  Try **git --version** at the command line, and if you don't have it, you'll need
 to install it.  Every major package manager for Linux (e.g. yum, aptget, etc) has git in it.  For OSX you may wanna try
 http://git-scm.com/download/mac.
 
 * A DNS domain you own.  This can be done on a variety of services (like GoDaddy), including Route 53 (AWS's own offering).  
-You'll need this because you'll want to create a **CNAME** for a domain you own to the name of the bucket AWS creates.  How you
-actually create a CNAME varies depending on your provider.  I'll give a general overview for how to do it on GoDaddy, but
- how to do this on a specific provider is outside the scope of a document.  If you don't know what a CNAME is, I suggest you
- read http://en.wikipedia.org/wiki/CNAME_record .
- 
-* Sorta optional: An HTTPS certificate for the domain name you create above.  You don't HAVE to do the HTTPS portion of
-this exercise (especially since HTTPS certs aren't cheap), but if you already have a yourdomain.com cert, or just have
- money to burn, this piece is very useful.
-
+You'll need this because you'll want to create a **CNAME** for a domain you own to the name of the Cloudfront distribution that
+ AWS creates.  How you actually create a CNAME varies depending on your provider.  I'll give a general overview for how to do 
+ it on GoDaddy, but how to do this on a specific provider is outside the scope of a document.  If you don't know what a CNAME is, 
+ I suggest you read http://en.wikipedia.org/wiki/CNAME_record .
 
 * Sorta optional: A Github account.  If you don't already have one, they are free.  Go to https://github.com/ and get one.
 This project works on the assumption that you won't really want to save the results, so if you are just working through
@@ -43,6 +44,9 @@ into your repo on github so that you can push back (you won't have push access t
 if you fork, and later I make changes, you'll need to pull and merge, so you may wanna wait to fork until the end.  And
 if you **DO** fork, remember that the clone commands should be for your repo, not mine.
 
+## New and Different
+* I used to recommend getting an HTTPS certificate, but now that AWS offers them for free we will be just creating one
+of those in the course of the instruction.
 
 ## Getting started
 
@@ -55,4 +59,4 @@ CD into a local directory where you store your work and:
 
 This should create a directory "Chirp" with all the files in it.
 
-Congrats!  If you reached here, you are ready to move on to <a href="V01.md">Version 01</a>
+Congrats!  If you reached here, you are ready to move on to <a href="../01/README.md">Version 01</a>
