@@ -1,10 +1,8 @@
 # Module: V03
 # Goals: 
-* Create a very basic API layer server and test it locally
-* Create a IAM Role for our API servers and a EC2-Key for login
+* Create a very basic API Lambda function and test it locally
+* Create a IAM Role for our Lambda function to use when it executes
 * Deploy the API to Lambda and test it there
-
--- replace your bucket in updateserver.sh
 
 
 ## Introduction to V03
@@ -106,36 +104,8 @@ open your environment in a new window, which will give you a 404 because chirp d
 instead to **http://api.elasticbeanstalk.com/api/v1/info/server** to get the familiar endpoint we saw when we were running 
 locally.
 
-## Change our Cloudfront distribution to route /api/** to that location
 
-Now we have a running server, which is great, but we really want to be able to hit that server from the same URL as our
-static content - so what we are going to do is instruct CloudFront to send all traffic that matches the pattern /api/* over
-to our Elastic Beanstalk servers, and everything else gets served from our S3 bucket (yes, this means that from now
-on you can't create a subdirectory in static-website named **api**, since it'll be hidden by CLoudfront.  Why would you
-do that anyway? - Unless you wanted to use that for local testing...hmmmm....)
 
-* Go to the AWS console, then select Cloudfront, and click on your distribution.
-* Click on the **Origins** tab
-* Click **Create Origin**
-* Origin Domain Name: This is the domain name you selected (**api.elasticbeanstalk.com**)
-* Origin Protocol Policy: For now, use HTTP Only
-* Leave the ports as 80 and 443
-* Hit **Create**
 
-This makes the load balancer a valid upstream.  Now to make traffic go there...
-* Select the **Behaviors** tab
-* Hit **Create Behavior**
-* Path Pattern: api/*
-* Origin: Select the load balancer origin
-* Allowed Methods: Select **GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE**
-* Forward Header: Select **ALL**
-* Forward Cookies: Select **ALL**
-* Forward Query Strings: Select **Yes**
-* Hit **Create**
-
-* Go back to the main Cloudfront page.  Your distribution will likely have the status **In progress**.  Wait until it
-is in status **Deployed**.  Once that is true, hit **http://www.yourdomain.com/api/v1/info/server** - if you get
-back the JSON object, you're good - you are hitting the API through the Cloudfront route!
-
-Congrats!  If you reached here, you are ready to move on to <a href="V04.md">Version 04</a>
+-- replace your bucket in updateserver.sh
 
