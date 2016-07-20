@@ -29,7 +29,7 @@
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
         <mytime>${maven.build.timestamp}</mytime>
         <site.name>chirp</site.name>
-        <seedy.version>0.9.0+45</seedy.version>
+        <seedy.version>0.9.1+49</seedy.version>
     </properties>
 
     <modules>

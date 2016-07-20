@@ -152,11 +152,14 @@ A brief summary of what this plugin is doing in its configuration:
 
 ## Upload new content using seedy and make sure it works
 Lets try the upload now.  At the command line in the static-site directory, execute **mvn seedy:s3-upload**.  It should
-fail, complaining of a missing s3Bucket parameter if you forget to make the edit above, or if not a likely
-NullPointerException.  If you get that, its just a poorly-written exception caused by not having any credentials available!  
+fail, complaining of a missing s3Bucket parameter if you forget to make the edit above.
+
+If you get a NullPointerException, its just a poorly-written exception caused by not having any credentials available!  
 You can either follow the **aws configure** information above, or pass them in on the command line like this:
 
 **mvn -Daws.accessKeyId=XXX -Daws.secretKey=YYY seedy:s3-upload**
+
+You can also set the s3Bucket parameter the same way if you want by adding a **-DBUCKET_NAME=(your bucket)**
 
 If all went well, you should see a bunch of output ending with **Completed transfering xxx bytes...**
 
