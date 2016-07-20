@@ -21,7 +21,7 @@ aws s3 cp LambdaDeploy.zip s3://my-bucket/LambdaDeploy.zip
 
 echo 'Uploaded, updating lambda'
 
-deploy_function "$1" 'chirp-server-info'
+deploy_function "$1" 'chirp_server_status'
 
 echo 'Updates complete'
 echo 'Cleaning up local file'

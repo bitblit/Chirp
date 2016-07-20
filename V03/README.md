@@ -4,6 +4,7 @@
 ** Run chirp_service test locally
 ** Run server status locally
 * Create a IAM Role for our Lambda function to use when it executes
+* Create the server_status Lambda function stub on the server
 * Deploy the API to Lambda
 * Test server status on lambda
 
@@ -118,23 +119,105 @@ function for execution.
 
 ## Create a IAM Role for our Lambda function to use when it executes
 
-Now we are going to create some security infrastructure for our API layer.  First off, an **IAM Role**.  Understanding
-roles completely is outside of the scope of this document, but for the moment assume a role is like the user account you 
-created for yourself, except it is an account used by EC2 instances instead of people.  We will create one, and every
-EC2 instance created by Elastic Beanstalk will have that role, allowing it to do whatever privileges we grant to the 
-role.  
+Now we are going to create some security infrastructure for our API layer.  First off, an **IAM Policy** and **IAM Role** 
+that our Lambda function will use when it runs.  Understanding roles completely is outside of the scope of this document, 
+but for the moment assume a role is like the user account you created for yourself, except it is an account used by 
+the Lambda function instead of you.  We will create one, and all of our Lambda functions will use this role to access
+other resources on AWS they need, like S3 and DynamoDB.
 
-So head into AWS console, and hit IAM, then Roles.  Hit **Create new Role** and name it **chirp-prod**.  Select the 
-service role of **Amazon EC2**, and then grant it **Administrator Access** (Yes, all the things I said about Admin
-access for you also apply to roles here.  Don't do this on a real production server).
+So head into AWS console, and hit **IAM**, then **Policies** (on the left).  Hit **Create Policy**, then **Create your own policy**.  Use
+**chirp-lambda-policy** for the policy name, and then enter this as the policy document:
 
-Next, we are going to create a keypair.  Keypairs are basically passwords that allow you to login directly (using SSH) to
-EC2 instances.  Generally, logging into your Elastic Beanstalk instances is a bad idea, because it leads you to think
-about them as if they are constant servers, instead of ephemeral things that can disappear at any minute - but when you
-are debugging an app, the ability to login and watch whats going on sometimes comes in handy.  Go to the console and 
-click **EC2**, then under **Network and Security** select **Key Pairs**.  Hit **Create Key Pair** and use the name
-**chirp-key**.  It should download you a file called **chirp-key.pem**.  Store this file in a safe place, and
-**NEVER** check it into source control.
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "1",
+            "Effect": "Allow",
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::*"
+            ]
+        },
+        {
+            "Sid": "2",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:*"
+            ],
+            "Resource": [
+                "arn:aws:dynamodb:*"
+            ]
+        },
+        {
+            "Action": [
+                "logs:*"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:logs:*:*:*"
+        }
+    ]
+}
+```
+
+This policy gives any Lambda functions we create the ability to do anything to any of our S3 buckets and DynamoDB tables,
+and to write to CloudWatch logs.  This is probably way too open for your production systems - in real life you'll
+wanna tune these down to just the right buckets and tables later.(Yes, all the things I said about 
+ access earlier also apply to roles here.  Don't do this on a real production server).
+
+Now that we have a policy, we need to create a role that uses it (we create the policy separate from the role so 
+we can reuse it later).  Hit **Roles** on the left, then Hit **Create new Role** and name it **chirp-prod**.  Select the 
+service role of **AWS Lambda**, and then select the policy you just created (its easier to find if you change the filter
+to "customer managed policies").  Hit the **Create Role** button at the botton and you are good!  
+
+## Create the server_status Lambda function stub on the server
+
+Now we'll create the server_status Lambda function on AWS.  I call it a stub because it won't have the functionality
+we were testing yet, it'll just be an empty shell.  Let's get started.  Go to the AWS Console and hit
+**Lambda**.  If its your first time click the accept button to go past the introductory page.  Then, we'll hit
+**Create a lambda function**, and ignore all the built in ones, scrolling to the bottom and hitting **Next**. 
+
+Hit **Next** on the triggers page, to get to the "Configure function" page.  We'll use the name **chirp_server_status**,
+and set the runtime to "Python 2.7".  Leave the code alone for the moment, and scroll down.  Set the handler to
+**_api/server_status**  This is important - it tells lambda what function, out of everything we will upload, it should run.  To
+simplify Chirp we are going to upload the whole API as a zip for each function, so this tells them apart.
+
+Set role to **choose existing role**, and then select the chirp-prod role you just created.  Leave memory at 128 Mb, and set
+the timeout to 9 seconds (we'll use these defaults everywhere.  That's because API Gateway has a timeout of 10 seconds!)
+
+Leave VPC set to "None", hit **Next**, review your function, and hit **Create Function**
+
+Congrats!  You have a Lambda function available!
+
+Let's try running it.  Hit the **Test** button in the upper left corner.  It'll ask you to configure a test event.  This is
+using the same format as the server_status.json file we use for local testing!  In fact, just copy the contents of server_status.json
+into the dialog box and hit **Save and Test**.
+  
+**Scroll Down**!  For some reason Lambda's UI leaves you at the top of the page - but your function is running, its just
+  that the output is at the bottom of the page.  You'll get an error message:
+
+```json  
+  {
+    "errorMessage": "Bad handler '_api/server_status'"
+  }
+```
+  
+That's because we told it to use a different handler than the default one.  So far so good.  Let's upload that handler.
+
+Back on your local box, you'll see there is a script at the top of V03 named **UpdateServer.sh**.  This script zips up all of 
+your Python files into a zip file and then tells Lambda to deploy each one as a function.  Try reading the script now.  You'll
+notice by default it deploys every function (even though right now there is only one) but you can tell it to deploy a single function
+if you like by passing that function's name.
+
+As long as you have the AWS cli configured (you did that above) you can just run this script to deploy all your functions!  As we
+create more functions in later lessons we'll add them to this script.  Let's run it!
+
+
+
+
 
 ## Deploy the API to Elastic Beanstalk
 
