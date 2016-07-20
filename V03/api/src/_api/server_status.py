@@ -5,7 +5,6 @@ from _lib.illegal_access_error import IllegalAccessError
 from _lib.invalid_request_error import InvalidRequestError
 from _lib.no_such_resource_error import NoSuchResourceError
 
-
 def lambda_handler(event, context):
     api = LambdaAPI("Creating text item", "https://ms-spike.timecommerce.net/api-errors", event, context)
     api.log_initial_status()
@@ -43,3 +42,6 @@ def lambda_handler(event, context):
         return api.api_success(to_output)
     except Exception as exception:
         api.convert_exception_to_error_response(exception)
+
+if __name__ == '__main__':
+    LambdaAPI.run_lambda_function_local(__file__, lambda_handler)

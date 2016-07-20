@@ -2,6 +2,7 @@ import logging
 import traceback
 
 import simplejson
+import os
 
 from illegal_access_error import IllegalAccessError
 from invalid_request_error import InvalidRequestError
@@ -111,3 +112,31 @@ class LambdaAPI:
         if len(missing) > 0:
             errors = ",".join(missing)
             raise InvalidRequestError(100, 'Fields missing ' + errors)
+
+    @staticmethod
+    def load_test_event_for_current_lambda_function(myfile):
+        file_name = os.path.basename(myfile)
+        api_dir = os.path.dirname(myfile)
+        src_dir = os.path.dirname(api_dir)
+        par_dir = os.path.dirname(src_dir)
+        test_file = par_dir+"/test/event/"+file_name[0:-3]+".json"
+
+        with open(test_file) as json_file:
+            event_data = simplejson.load(json_file)
+
+        return event_data
+
+    @staticmethod
+    def run_lambda_function_local(myfile, lambda_function):
+        logging.debug("Running program {0}".format(myfile))
+        event_data = LambdaAPI.load_test_event_for_current_lambda_function(myfile)
+        logging.debug("Event: {0}".format(event_data))
+        context = {}
+
+        print "-----------------------------------"
+
+        try:
+            result = lambda_function(event_data, context)
+            print("{0}".format(result))
+        except Exception as e:
+            print("ERROR: {0}".format(e))

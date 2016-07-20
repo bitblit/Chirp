@@ -50,8 +50,8 @@ certificate manager later
 * Leave "Forward Headers" to None
 * Leave "Object Caching" to "Use Origin Cache Headers"
 * Leave the Min/Max TTLs alone
-* Set "Forward Cookies" to **ALL**
-* Set "Forward Query Strings" to **Yes**
+* Set "Forward Cookies" to **None**
+* Set "Forward Query Strings" to **No**
 * Leave "Smooth Streaming" to **No**
 * Leave "Restrict viewer access" to **No**
 * Set "Compress Objects Automatically" to **Yes** (This will make Cloudfront GZIP your content and set the Content-Encoding header.  Maybe
