@@ -182,8 +182,8 @@ we were testing yet, it'll just be an empty shell.  Let's get started.  Go to th
 
 Hit **Next** on the triggers page, to get to the "Configure function" page.  We'll use the name **chirp_server_status**,
 and set the runtime to "Python 2.7".  Leave the code alone for the moment, and scroll down.  Set the handler to
-**_api/server_status**  This is important - it tells lambda what function, out of everything we will upload, it should run.  To
-simplify Chirp we are going to upload the whole API as a zip for each function, so this tells them apart.
+** _api/server_status.lambda_handler **  This is important - it tells lambda what function, out of everything we will upload, 
+it should run.  To simplify Chirp we are going to upload the whole API as a zip for each function, so this tells them apart.
 
 Set role to **choose existing role**, and then select the chirp-prod role you just created.  Leave memory at 128 Mb, and set
 the timeout to 9 seconds (we'll use these defaults everywhere.  That's because API Gateway has a timeout of 10 seconds!)
@@ -207,57 +207,47 @@ into the dialog box and hit **Save and Test**.
   
 That's because we told it to use a different handler than the default one.  So far so good.  Let's upload that handler.
 
+## Deploy the API to Lambda
+
 Back on your local box, you'll see there is a script at the top of V03 named **UpdateServer.sh**.  This script zips up all of 
 your Python files into a zip file and then tells Lambda to deploy each one as a function.  Try reading the script now.  You'll
 notice by default it deploys every function (even though right now there is only one) but you can tell it to deploy a single function
 if you like by passing that function's name.
 
 As long as you have the AWS cli configured (you did that above) you can just run this script to deploy all your functions!  As we
-create more functions in later lessons we'll add them to this script.  Let's run it!
+create more functions in later lessons we'll add them to this script.  First, we'll need to change it to use your bucket.  Search
+through the script and replace every instance of my-bucket with your bucket's name.
 
+Then...  Let's run it!
 
+After a bunch of information on creating the zip file, and uploading it, and then deploying the function, you
+should see the end of the script output:
 
+  Updates complete
+  Cleaning up local file
+  Cleaning up s3
+  delete: s3://my-bucket/LambdaDeploy.zip
+  Finished
 
+## Test server status on lambda
 
-## Deploy the API to Elastic Beanstalk
+Finally, lets go back to our page where we ran the function last time and press the **Test** button again.  If all goes well, now
+your output will look a lot like what it did locally:
 
-Now we are going to make this thing live on a public server.  By the end of this step we'll be automating the proces, but
-for the first release we'll do it manually.  Start out by, in the **api** directory, running the command 
-**mvn clean package**.  Then, look in the **target** directory, where you should see a file named
-**chirp-api-1.0.0-SNAPSHOT.war**.
+```json
+ {
+   "notes": null,
+   "code": 200,
+   "data": {
+     "status": "ok",
+     "serverTimeFormatted": "2016-07-20 23:05:18",
+     "serverTime": 1469055918,
+     "serverStartTime": 1469055918,
+     "version": "4",
+     "serverStartTimeFormatted": "2016-07-20 23:05:18"
+   }
+ }
 
-Now go to the AWS console in your 
+```
 
-
-Now go to your AWS Console in your browser, and select **Elastic Beanstalk**, and then select **Create new application**.
-Going through the wizard it then runs, you'll want to use the values (anything that isn't specified below can be left as 
-the defaults):
-* Application Name: Chirp
-* Environment Tier:  Web Server
-* Predefined Configuration: Tomcat
-* Environment Type: Load Balancing, Autoscaling
-* Source: Select **Upload your own**, then **Choose File** and select the **chirp-api-1.0.0-SNAPSHOT.war** from the target
-directory you found in the last step
-* Environment Name: Chirp-prod
-* Environment URL: Here you'll have to do some exploring.  The URL's have to be unique; they don't really matter since you'll
-be using your CNAME, but remember what you put here because you'll need it later.  I'll use "api.elasticbeanstalk.com"
-in this document, replace it with your own url as necessary
-* We won't create an RDS instance, and not in a VPC this time (leave both unchecked)
-* EC2-Keypair: Select chirp-key
-* Email address: Enter your address.  You'll be emailed when important things (like server crashes) happen on your EB application
-* Application health check URL: Leave blank for now.  This will cause the Load balancer to use a TCP-ping to tell if the 
-instance has crashed.  Later we'll wanna replace that with a better check, but this is ok for the moment
-* Instance profile: Select **chirp-prod**
-* Environment tags: leave blank
-
-At that point you can go ahead and launch!  Wait watching the little circle until we get a green check, meaning the application
-is up and ready to serve traffic.  Once it is green, you should be able to click on the link next to **chirp-prod**, and 
-open your environment in a new window, which will give you a 404 because chirp doesn't serve anything at the root level.  Go
-instead to **http://api.elasticbeanstalk.com/api/v1/info/server** to get the familiar endpoint we saw when we were running 
-locally.
-
-
-
-
--- replace your bucket in updateserver.sh
-
+If you made it this far, that's great!  Lets get it running as a web service in <a href="../V04/README.md">Version 04</a>

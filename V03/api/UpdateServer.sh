@@ -28,7 +28,7 @@ echo 'Cleaning up local file'
 rm LambdaDeploy.zip
 
 echo 'Cleaning up s3'
-aws s3 rm s3://my-bucket/Argon/LambdaDeploy.zip
+aws s3 rm s3://my-bucket/LambdaDeploy.zip
 
 echo 'Finished'
 
