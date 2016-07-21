@@ -15,12 +15,34 @@
 </head>
 <body>
 
+
     <div class="container">
-        <div class="xs-col-12" id="output">
+        <div class="col-sm-offset-2 col-xs-8" id="headerTab">
             <h1>Chirp</h1>
-            <p>Hello World!  Running V02</p>
         </div>
 
+        <div class="col-sm-offset-2 col-xs-8" id="postTab">
+            <div class=" form-group input-group">
+                <span class="input-group-addon"><i
+                        class="glyphicon glyphicon-pencil"></i></span>
+                <input class="form-control" type="text"
+                       id="chirpText" name="chirpText" value=""
+                       placeholder="Enter your chirp!"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" id="sendChirpBtn" type="button">Send</button>
+                </span>
+            </div>
+        </div>
+
+        <div class="col-sm-offset-2 col-xs-8">
+            <hr />
+        </div>
+
+        <div class="col-sm-offset-2 col-xs-8" id="showTab">
+            <ul class="list-group" id="chirpList">
+                <li class="list-group-item">Chirps loading...</li>
+            </ul>
+        </div>
 
     </div>
 
