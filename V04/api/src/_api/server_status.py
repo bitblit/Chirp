@@ -6,7 +6,8 @@ from _lib.invalid_request_error import InvalidRequestError
 from _lib.no_such_resource_error import NoSuchResourceError
 
 def lambda_handler(event, context):
-    api = LambdaAPI("Creating text item", "https://ms-spike.timecommerce.net/api-errors", event, context)
+    api = LambdaAPI("Creating text item", "https://my-server/api-errors", event, context)
+    api.set_root_logging_level(10)
     api.log_initial_status()
 
     try:
@@ -14,7 +15,7 @@ def lambda_handler(event, context):
             ['body-json']
         ])
 
-        error_code = api.fetch_value(['query', 'error'])
+        error_code = api.fetch_value(['params','querystring', 'error'])
         if error_code is not None:
             if str(error_code) == '500':
                 raise Exception('Forced 500')
@@ -22,11 +23,12 @@ def lambda_handler(event, context):
                 raise NoSuchResourceError(100,"Forced 404")
             elif str(error_code) == '403':
                 raise IllegalAccessError(100,"Forced 403")
+            elif str(error_code) == '400':
+                raise InvalidRequestError(100,"Forced 400")
             else:
                 raise InvalidRequestError(100,
-                                          "You attempted to force a code " + str(
-                                    error_code) + " but only 500, 403, and 404 are supported",
-                                "Bad Request")
+                                          "You attempted to force a code {0} but only 500, 403, and 404 are supported"
+                                          .format(error_code))
 
         now = datetime.datetime.now()
 
