@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <artifactId>parent</artifactId>
+        <groupId>com.erigir.chirp</groupId>
+        <version>LOCAL-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.erigir.chirp</groupId>
+    <artifactId>V04</artifactId>
+    <packaging>pom</packaging>
+    <name>Parent for V04</name>
+    <version>LOCAL-SNAPSHOT</version>
+    <description>Parent for V04</description>
+    <url>http://chirp.erigir.com</url>
+    <inceptionYear>2015</inceptionYear>
+
+    <issueManagement>
+    </issueManagement>
+
+    <ciManagement>
+    </ciManagement>
+
+    <organization>
+        <name>Chirp</name>
+        <url>http://chirp.erigir.com</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>cweiss</id>
+            <name>Chris Weiss</name>
+            <email>bitblit@gmail.com</email>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+
+
+</project>

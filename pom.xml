@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.erigir.chirp</groupId>
+    <artifactId>parent</artifactId>
+
+    <packaging>pom</packaging>
+    <version>LOCAL-SNAPSHOT</version>
+    <name>chirp</name>
+    <description>Twitter clone for learning Java</description>
+    <inceptionYear>2014</inceptionYear>
+    <developers>
+        <developer>
+            <id>cweiss</id>
+            <name>Chris Weiss</name>
+            <email>bitblit@gmail.com</email>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+        <mytime>${maven.build.timestamp}</mytime>
+        <site.name>chirp</site.name>
+        <seedy.version>0.9.1+49</seedy.version>
+    </properties>
+
+    <modules>
+        <module>V00</module>
+        <module>V01</module>
+        <module>V02</module>
+        <module>V03</module>
+        <module>V04</module>
+        <module>V05</module>
+        <module>V06</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <configuration>
+                        <skipDeploy>true</skipDeploy>
+                    </configuration>
+                    <version>3.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.wagon</groupId>
+                            <artifactId>wagon-ssh</artifactId>
+                            <version>1.0</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>
