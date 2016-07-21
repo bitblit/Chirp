@@ -2,7 +2,7 @@
   "body-json" : {},
   "params" : {
     "path" : {},
-    "querystring" : {"error":400},
+    "querystring" : {},
     "header" : {}
   },
   "stage-variables" : {},
