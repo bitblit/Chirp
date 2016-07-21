@@ -140,3 +140,7 @@ class LambdaAPI:
             print("{0}".format(result))
         except Exception as e:
             print("ERROR: {0}".format(e))
+
+    @staticmethod
+    def set_root_logging_level(level):
+        logging.getLogger().setLevel(level)
