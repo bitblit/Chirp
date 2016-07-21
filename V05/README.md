@@ -41,6 +41,9 @@ those functions to implement Chirp!
 
 ## Use those features on our static page
 
-TBD: Explain the changes to the index.html page
+TBD: Explain the changes to the index.html page that add get and post functionality
+
+So now that we are interacting with the customer, lets add some batch actions in <a href="../V06/README.md">Version 06</a>
+
 
 
