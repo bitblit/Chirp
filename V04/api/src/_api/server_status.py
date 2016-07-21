@@ -6,7 +6,7 @@ from _lib.invalid_request_error import InvalidRequestError
 from _lib.no_such_resource_error import NoSuchResourceError
 
 def lambda_handler(event, context):
-    api = LambdaAPI("Creating text item", "https://my-server/api-errors", event, context)
+    api = LambdaAPI("Getting server status", "https://my-server/api-errors", event, context)
     api.set_root_logging_level(10)
     api.log_initial_status()
 
@@ -16,7 +16,7 @@ def lambda_handler(event, context):
         ])
 
         error_code = api.fetch_value(['params','querystring', 'error'])
-        if error_code is not None:
+        if error_code is not None and len(error_code)>0:
             if str(error_code) == '500':
                 raise Exception('Forced 500')
             elif str(error_code) == '404':
@@ -27,7 +27,7 @@ def lambda_handler(event, context):
                 raise InvalidRequestError(100,"Forced 400")
             else:
                 raise InvalidRequestError(100,
-                                          "You attempted to force a code {0} but only 500, 403, and 404 are supported"
+                                          "You attempted to force a code {0} but only 500, 403, 404, and 400 are supported"
                                           .format(error_code))
 
         now = datetime.datetime.now()

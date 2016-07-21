@@ -62,12 +62,11 @@ Once that's done, lets go back to the previous page and hit **Integration Respon
 6) Enter type **application/json**
 7) Enter the value of  $input.path('$.errorMessage')
 8) Hit BOTH save buttons (otherwise sometimes it doesnt save!)
-
-
 (Repeat for each error code, changing the number)
 
-This finds the given regular expression in the body, and then maps it to the appropriate error code.
-Easy!
+This finds the given regular expression in the body, and then maps it to the appropriate error code.  The
+body mapping makes sure that we only output our body, not the entire string conversion of 
+the exception, which would include the stack trace.  Easy!
 
 One more thing - this endpoint accepts a query parameter named "error".  Hit **GET** again,
 then **Method Request**, then **URL Query String Parameters**.  Hit **Add query string**, and 
@@ -76,29 +75,128 @@ then enter **error** and hit save.
 We are ready to test!  Hit the **Test** button on the left.  You should get the response:
 
 ```json
-{
-  "notes": null,
-  "code": 200,
-  "data": {
-    "status": "ok",
-    "serverTimeFormatted": "2016-07-21 00:02:26",
-    "serverTime": 1469059346,
-    "serverStartTime": 1469059346,
-    "version": "4",
-    "serverStartTimeFormatted": "2016-07-21 00:02:26"
-  }
-}
+ {
+   "notes": null,
+   "code": 200,
+   "data": {
+     "status": "ok",
+     "serverTimeFormatted": "2016-07-21 00:02:26",
+     "serverTime": 1469059346,
+     "serverStartTime": 1469059346,
+     "version": "4",
+     "serverStartTimeFormatted": "2016-07-21 00:02:26"
+   }
+ }
 ```
 
 
 Now try it again, but enter "400" in the error parameter.  You should get:
+```json
+ {
+   "code": 400100,
+   "data": {
+     "developerMessage": "Forced 400",
+     "detailCode": 100,
+     "httpStatusCode": 400,
+     "message": "Forced 400",
+     "moreInfoUrl": "https://my-server/api-errors/400-100"
+   }
+ }
+```
 
+Just a few more things!  First, we need to enable CORS on our endpoint since
+we'll be calling it from a different URL.  Select the **status** resource
+in the tree, and then hit **Enable CORS** in the actions menu, then hit
+**Enable CORS and Replace Existing CORS headers**, and then hit
+ ** Yes, replace existing values ** on the box that pops up.  This adds several
+headers to the GET endpoint, and also creates a matching OPTIONS endpoint needed
+for the CORS preflight call.
 
+Finally, we need to deploy our API so it is reachable from the internet.  Select
+the Chirp API in the far left panel, and then hit **Deploy API** from the actions menu.
 
+Under Deployment stage hit **New Stage** and then enter **v1** in the "Stage Name" field.  You can
+enter whatever you like in the other 2 fields, they are there for notes only.  Hit **deploy**.
 
+And congrats!  You have a deployed API.  Take a look at the top of the screen; you should see
+a url that looks kinda like this:
 
+ Invoke URL: https://dye6xunt40.execute-api.us-east-1.amazonaws.com/v1
 
-## Why not change our Cloudfront distribution to route a path (say, /api/** ?) to our API Gateway?
+This is the URL where your API lives.  Eventually we will add a CNAME to use one of our own
+domain names, but for the moment this one is fine.  Lets hit it!  From the command line, try:
+
+ > curl https://dye6xunt40.execute-api.us-east-1.amazonaws.com/v1/server/status
+ 
+Did you get the right response?  You're golden!
+ 
+# Download the generated library and add it to our static deploy
+
+One of the best things about API Gateway (and all that config we just went through) is that it
+creates a fully valid OpenAPI/Swagger configuration (see https://openapis.org/ for details about
+the spec).  Hit **Export** under the invoke URL, and hit the "Swagger + API Gateway Extensions" button
+if you'd like to see exactly what such a definition looks like (in the future we'll do so to simplify
+some things like adding all of those error code mappings!)
+
+Now, hit **SDK Generation** - check that out, we can auto-generate a client for calling our API, both for
+mobile platforms like iOS and for websites through Javascript!  We are going to download the javascript 
+client (it'll come down as a zip file) and unzip it into our directory **static-site/src/main/webapp/js**,
+creating a directory named **apiGateway-js-sdk** under there.  We'll leave it untouched - in future modules
+we'll delete this directory entirely and replace it as we add more functions to the API.
+
+# Call the library from our static page
+
+How do we use it?  The library comes with a very nice README file for now we will add a call
+our **chirp.js** file, located inside the **js** directory as well.
+
+First, in index.html we will add a reference to the library, just before the inclusion of chirp.js
+(it needs to come before that since chirp.js will use these)
+
+```html
+ <!-- Bring in the api stuff -->
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+ <script type="text/javascript" src="/js/apiGateway-js-sdk/apigClient.js"></script>
+```
+
+And then in chirp.js we'll replace its contents with:
+
+```javascript
+ $(document).ready(function () {
+     console.log("Chirp page loaded");
+     var api = apigClientFactory.newClient();
+     console.log("Api interface created : "+api);
+
+     api.serverStatusGet({'error':''}, {}, {}).then(function (data) {
+         $("#output").html(JSON.stringify(data));
+     }, function (err) {
+         alert("There was an error!\n\n" + JSON.stringify(err));
+     });
+
+});
+
+```
+
+You'll see that it now makes a call out to the api, and if it succeeds (the client library uses
+promises as its default method of making calls) it replaces the contents of the "output" div
+with a JSON version of the response, which will look familiar to you by now!  You'll also notice
+that we are sending an empty string for the 'error' parameter - this is how we could send the error
+code we were testing with above.
+
+Go ahead and deploy that to your bucket, and refresh your page.  Look at that!  You have a functioning
+website with both static and API layers, and you aren't running any servers!  If you've got it down you
+could stop here - but if you'd like some more examples, we add using DynamoDB as our database in
+ <a href="../V05/README.md">Version 05</a>
+
+### Footnote : Why not change our Cloudfront distribution to route a path (say, /api/** ?) to our API Gateway?
 
 I used to recommend doing exactly this, since it meant not having to do all the CORS stuff (which
 also simplified supporting old browsers).  The reason I don't any more is twofold:

@@ -1,264 +1,46 @@
 # Module: V05
 # Goals: 
-* Add a new feature to our API
-* Deploy the new API feature
-* Add the new feature to our static page
-
+* Add a database to our API
+* Deploy the new API features
+* Use those features on our static page
 
 ## Introduction to V05
 You now have a functioning website with both dynamic and static content being served through Cloudfront.  We have the
-basic plumbing done and its time to start adding features.  First, we are going to add some Javascript to make sure
-the server works correctly - but to make it work locally we'll have to tweak our development process.  Then we'll add 
-another feature to the API (a chirp count) and work through how we deploy new versions of the API.
+basic plumbing done and its time to start adding features.  We're going to create a DynamoDB Table for storing our "chirps",
+and add functions to our api to add new chirps and fetch the existing ones.
 
-## Add a JQuery call from our static page to the API
+## Add a database to our API
 
-So we now have an api endpoint that can tell us the current server time.  Lets add that to our index page using
-JQuery.
+First, we'll need to create our table.  From the AWS Console, go to **Dynamo DB**.  Pass the introductory page (if you haven't before)
+and hit **Create Table**.  There are lots of details on how to correctly build a Dynamo DB table for rapid access... We are going to skip
+all of them here and build a very simplistic table.  Just realize, as with the security constraints, that you wouldn't do it
+exactly this way in a production site.
 
-Open up **index.html** in the static-site directory.  Find where it says 
+Set the table name to **chirp**, the primary key to **userId** (type string) and check the **add sort key** box, then
+enter the name **timestamp** for the sort key (set the type to Number).
 
-    <h1>Chirp</h1> 
+Uncheck *use default settings* and change the read and write capacity to 2 each - we won't be using 5 TPS at this time.
 
-and under that add:
+While that table is being created, lets take a look at the new and improved chirp service under **src/api/_lib**.  It's still
+pretty simple, but you'll notice that we have included a new library, boto3, that is used to interact with AWS services.  In this
+case we'll be using it to talk to dynamodb; using the get_item, put_item, and query functions to get and save new chirps.  Then
+take a look at _api... 2 new api endpoints in there, fetch_chirps and save_chirp.  You'll also notice that in the UpdateServer
+script they are now wired in to be uploaded as chirp_save_chirp and chirp_fetch_chirps.
 
-    <div>Server time: <span id="serverTime">TBD</span></div>
+## Deploy the new API features
 
-We are going to have JQuery replace that "TBD" with the current server time.  Open up **chirp.js** and find where
-it says:
+Here's where we leave a big exercise for the reader - for both of the new api functions you'll need to follow the instructions from section
+4 to create Lambda functions with the correct names... then run the UpdateServer script to populate them (you need to create the functions
+manually - UpdateServer will only update functions, not create them).  Once they are created, you'll need to create a new endpoint in
+your API /chirp (at the same level as /server).  On /chirp we will create two methods, POST and GET.  The POST will call the save_chirp
+function and GET will call the fetch_chirps function.  Be sure to add CORS (it'll only need to be done once, since the OPTIONS will apply to
+both the POST and GET at that url) and then deploy the API (deploy it over the top of V1).  Finally, you'll want to download the new 
+javascript library and install it in the *static-site/src/main/webapp/js* directory.  Sound like a lot?  It is, but nows the time to 
+get your feet wet.  Some errors will do you good. And when you're finished, come back because in the next step we'll start calling 
+those functions to implement Chirp!
 
-    console.log("Document ready placeholder");
+## Use those features on our static page
 
-You can delete that line, and in its place we will add this call:
+TBD: Explain the changes to the index.html page
 
-    $.ajax({
-        type: "GET",
-        url: "/api/v1/info/server",
-        contentType: "application/json; charset=utf-8",
-        success: function (res, statusText, xhr, $form) {
-            $("#serverTime").html(new Date(res.serverTime));
-        },
-        error: function (res, statusText, xhr, $form) {
-            $("#serverTime").html("<h1>Error trying to lookup time: "+statusText+"</h1>");
-        },
-        dataType: 'json'
-    });
-
-Let's go ahead and deploy that to our server using our Seedy command
-
-**mvn -Daws.accessKeyId=XXX -Daws.secretKey=YYY seedy:s3-upload**
-
-Running from the **static-site** directory, and then check out what happens by hitting **http://www.yourdomain.com/index.html**
-
-If everything went well, you should see the server time output below the **Chirp** header.  If not, time to debug your
-javascript!  Doing that is outside the scope of this document, but on Chrome I like to use **View/Developer/Javascript Console**.
-
-## Tweak our local development process
-
-Once we start developing in earnest we'll want to test our development locally before we push it to the production 
-servers.  So lets try that out.  
-
-Open up a command terminal and CD into the api directory, and run **mvn tomcat7:run**.  Make sure it starts 
-by hitting **http://localhost:8081/api/v1/info/server**.
-
-Open up another command terminal and CD into the static-site and run **mvn tomcat7:run**.  Make sure it starts by
-hitting **http://localhost:8080/index.html**.  You should get your index page... but you'll notice that the 
-server time isn't working.  What gives?  Well, when developing locally, we don't have Cloudfront doing our URL
-splitting.  There are a variety of ways to deal with this, but here is how we are going to do it:
-
-Go back to **chirp.js**.  At the top of the file (before the $(document).ready) add this:
-
-    var hostname = location.hostname;
-    var apiServerPrefix = (hostname=='localhost')?"http://localhost:8081":"";
-    console.log("Using server prefix "+apiServerPrefix);
-
-This will use our local server if we are running on localhost, and the same server otherwise.  Then, in the Ajax call replace:
-
-    url: "/api/v1/info/server",
-
-with
-
-    url: apiServerPrefix+"/api/v1/info/server",
-
-And hit refresh on your browser... it should work now!  This is the nice part about local development, changes are instantaneous.
-
-Go ahead and deploy that version to the production server to make sure we didn't break anything (use the
-
-**mvn -Daws.accessKeyId=XXX -Daws.secretKey=YYY seedy:s3-upload**
-
-command in the static-site directory.  From here on in, when I say "deploy the static site to production" I'll assume you
-know that is what I mean)
-
-Hit **http://www.yourdomain.com/index.html** and make sure it still works.  If so, move on to the next step.
-
-## Add a new feature to our API
-
-Eventually we are going to add the ability to manipulate Chirps through our API, but for the moment we just want to 
-see how to actually take new versions live.  Fortunately, Seedy also helps with this.  Lets add a new API feature, test it locally,
-and then see how to push it into production.
-
-We are going to add a service layer for chirps, and an endpoint to get to them.  Create a new directory, 
-**api/src/main/java/com/erigir/chirp/service**, and in it create the file **ChirpService.java**.  In that file, lets
-put this content:
-
-    package com.erigir.chirp.service;
-    
-    public class ChirpService
-    {
-        /**
-         * Returns a count of all chirps
-         * @return int containing the count
-         */
-        public int getChirpCount()
-        {
-            return 0;
-        }
-        
-    }
-
-Now, in the file **ServiceContext.java** (under chirp/config), we need to create an instance of ChirpService, so open 
-that file, and after the bean for ChirpFilter lets add:
-
-    @Bean
-    public ChirpService chirpService()
-    {
-        ChirpService bean = new ChirpService();
-        return bean;
-    }
-
-Also we'll need to add
-
-    import com.erigir.chirp.service.ChirpService;
-
-At the top of the file.
-
-And we need to expose this out through the web interface, so in **com/erigir/chirp/ctrl/v1**, lets create a file 
-**ChirpCtrl.java**, with the contents:
-
-    package com.erigir.chirp.ctrl.v1;
-    
-    import com.erigir.chirp.service.ChirpService;
-
-    import org.slf4j.Logger;
-    import org.slf4j.LoggerFactory;
-    import org.springframework.stereotype.Controller;
-    import org.springframework.web.bind.annotation.*;
-    
-    import javax.annotation.Resource;
-    import java.util.Date;
-    import java.util.Map;
-    import java.util.TreeMap;
-    
-    @Controller
-    @RequestMapping("/api/v1/chirp")
-    public class ChirpCtrl {
-        private static final Logger LOG = LoggerFactory.getLogger(ChirpCtrl.class);
-    
-        @Resource(name="chirpService")
-        private ChirpService chirpService;
-    
-        @RequestMapping(value = "/count", method = RequestMethod.GET)
-        public
-        @ResponseBody int chirpCount()
-        {
-            return chirpService.getChirpCount();
-        }
-    
-    }
-    
-Let's compile and test it.  Kill your tomcat server for the API and restart with **mvn clean package tomcat7:run**
-(in general we need to sometimes restart the API server, but never the static server).  Once the server starts (and
-you do any needed debugging) hit **http://localhost:8081/api/v1/chirp/count** - you should get back a 0.
-
-## Deploy the new API feature
-
-Time to take the new API feature public.  This isn't HARD, but it is more difficult than publishing the static site,
-since if we are taking live traffic we need to keep handling it even as we stand up the new version.  We do this using a
-feature called "Zero downtime deploys", where we actually create a whole different set of servers running the new 
-version, and then start sending traffic to them instead of the old servers - and never leaving the site without some
-valid servers.  How do we do this?  Taking a look inside the pom.xml file under **api**, you'll find this section:
-
-    <plugin>
-        <groupId>com.erigir</groupId>
-        <artifactId>seedy-maven-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <configuration>
-            <afterGreenSleepSeconds>30</afterGreenSleepSeconds>
-            <applicationName>${APP_NAME}</applicationName>
-            <s3Bucket>${WAR_UPLOAD_BUCKET}</s3Bucket>
-            <s3Prefix>${WAR_UPLOAD_PREFIX}</s3Prefix>
-            <poolConfigFile>src/main/config/live-config.json</poolConfigFile>
-            <solutionStack>64bit Amazon Linux 2014.03 v1.0.4 running Tomcat 7 Java 7</solutionStack>
-            <prePingSleepSeconds>300</prePingSleepSeconds>
-            <maxWaitSeconds>420</maxWaitSeconds>
-            <liveServerDomainName>${LIVE_DOMAIN_NAME}</liveServerDomainName>
-            <preFlipLiveWaitSeconds>15</preFlipLiveWaitSeconds>
-            <terminateOldEnviroment>false</terminateOldEnviroment>
-            <applicationFile>${project.build.directory}/${project.build.finalName}.war</applicationFile>
-        </configuration>
-    </plugin>
-
-You'll notice some variables in there.  Lets go into what they are and what we should set them to.
-
-* APP_NAME : This is the name of your application in Elastic Beanstalk.  In our case, **chirp**
-* WAR_UPLOAD_BUCKET : When Java applications are deployed, first a WAR file is created and uploaded into an S3
-bucket (similar to the one we are serving the website from) and then Elastic Beanstalk reads it from there to
-create the server.  We haven't created a bucket for this yet, so lets do so.  Open the AWS console, and go to S3.
-Create a new bucket (name it something like "seedy-deployment").  This name will be WAR_UPLOAD_BUCKET for you.
-* WAR_UPLOAD_PREFIX : You may want to use Seedy to deploy multiple applications.  You don't need to create a new
-bucket for each one, just use the prefix (which acts like a directory in S3).  We'll use **chirp/** (it should
-end with a slash to make it work like a directory instead of a true prefix)
-* LIVE_DOMAIN_NAME : This is the domain name your live server currently runs under.  I'm using api.elasticbeanstalk.com as a
-placeholder in the documentation, but you need to fill in what yours is actually named.
-
-Note that file referenced in there: **live-config.json** - this file is really useful for configuring important things
-about your elastic beanstalk instance, like how many servers it should start.  You should take a look at it!  When you're
-done, come back here and we'll deploy a new version like so:
-
-**mvn -DWAR_UPLOAD_BUCKET=my-bucket -DWAR_UPLOAD_PREFIX=chirp/ -DAPP_NAME=chirp -DLIVE_DOMAIN_NAME=api.elasticbeanstalk.com \
-  -Daws.accessKeyId=XXX -Daws.secretKey=YYY -DBUILD_NUMBER=1 seedy:start-new-environment **
-  
-And watch it start your new environment!  You can follow along in the AWS console by opening up the Elastic Beanstalk page
-and watching it create the environment like you did last time.
-
-Once its green, you should be able to test it by clicking the link it created (it should be a url like 
-**http://api-1.elasticbeanstalk.com/api/v1/chirp/count**).  You'll notice that this url can get a chirp count, whereas
- the current LIVE url (**http://api.elasticbeanstalk.com/api/v1/chirp/count**) cannot, since its running an older 
- version.  Is that how yours looks?  Also, notice that you cannot hit **http://www.yourdomain.com/api/v1/chirp/count**
- either, since it is sending traffic to the old version.
- 
-Now note the button above your 2 green boxes labelled **Swap URLs**.  This makes a routing change inside AWS that changes
-the names of the two Load balancers.  What this means is that the live URL becomes off, and the off URL becomes live.  Go
-ahead and press that button, and wait until the boxes go back to green (they should go temporarily grey).
-
-Once green again, try hitting **http://www.yourdomain.com/api/v1/chirp/count** (you may have to hit refresh a few times)...
-TADA! your new version of your API is now live, with its new function!  Of course, AWS bills us per server, so lets
-go ahead and shut down our old version by clicking the one named **chirp-prod**, and then hitting 
-**Actions/Terminate Environment**.  **ALWAYS MAKE SURE YOU ARE KILLING THE NON-LIVE ENVIRONMENT!**
-
-## Add the new feature to our static page
-
-Ok, now that our feature is live on the API server, we can call it from our HTML page.  Edit index.html and under the
-server time entry add
-
-    <div>Chirp Count: <span id="chirpCount">TBD</span></div>
-
-And in chirp.js under the first ajax call lets add another:
-
-    $.ajax({
-        type: "GET",
-        url: apiServerPrefix+"/api/v1/chirp/count",
-        contentType: "application/json; charset=utf-8",
-        success: function (res, statusText, xhr, $form) {
-            $("#chirpCount").html(res);
-        },
-        error: function (res, statusText, xhr, $form) {
-            $("#chirpCount").html("<h1>Error trying to lookup time: "+statusText+"</h1>");
-        },
-        dataType: 'json'
-    });
-
-Deploy that file to your live server, and see the count of 0 come out!
-
-Congrats!  If you reached here, you are ready to move on to <a href="V05.md">Version 05</a>
 

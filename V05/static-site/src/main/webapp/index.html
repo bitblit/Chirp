@@ -15,39 +15,33 @@
 </head>
 <body>
 
-<div class="container">
-    <h1>Chirp</h1>
-</div>
-
-<div id="newChirp" class="container">
-    <form id="newChirpForm">
-        <div class="row top-buffer form-group input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-            <input class="form-control" type="text" id="chirp-text" name="chirp-text" value="" placeholder="New chirp..."/>
+    <div class="container">
+        <div class="xs-col-12" id="output">
+            <h1>Chirp</h1>
+            <p>Hello World!  Running V02</p>
         </div>
-        <span id="submitChirpButton" class="btn btn-primary btn-lg center-block" href="#">Chirp!</span>
-        <span id="refreshChirpButton" class="btn btn-primary btn-lg center-block" href="#">Refresh ...</span>
 
 
+    </div>
 
-    </form>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js" type="text/javascript"></script>
+    <script src = "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <!-- Bring in the api stuff -->
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+    <script type="text/javascript" src="/js/apiGateway-js-sdk/apigClient.js"></script>
 
 
-</div>
-
-<hr />
-
-<div class="container" id="chirps">
-
-</div>
-
-
-
-<script src="//code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
-<script src = "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
-
-<script src="/js/chirp.js"></script>
-
+    <script src="/js/chirp.js"></script>
 
 </body>
 </html>
