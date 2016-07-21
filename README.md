@@ -8,6 +8,11 @@ An application for learning serverless architectures by reimplimenting Twitter (
 4) Add dynamic content using DynamoDB
 5) Add image uploads through S3
 
+A note to previous users of Chirp
+=================================
+Until July 2016, Chirp was a tutorial based on Java and Elastic Beanstalk.  I've become convinced serverless
+architectures are the way of the future, so I've updated Chirp to take advantage of AWS Lambda instead.  I hope
+you like the new look!
 
 Introduction
 ============
