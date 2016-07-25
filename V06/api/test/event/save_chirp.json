@@ -1,0 +1,12 @@
+{
+  "body-json" : {
+    "chirp-text" : "Test chirp text"
+  },
+  "params" : {
+    "path" : {},
+    "querystring" : {},
+    "header" : {}
+  },
+  "stage-variables" : {},
+  "context": {}
+}

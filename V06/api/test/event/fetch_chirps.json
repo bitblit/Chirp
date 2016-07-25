@@ -1,0 +1,10 @@
+{
+  "body-json" : {},
+  "params" : {
+    "path" : {},
+    "querystring" : {},
+    "header" : {}
+  },
+  "stage-variables" : {},
+  "context": {}
+}
